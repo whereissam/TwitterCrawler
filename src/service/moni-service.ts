@@ -1,4 +1,7 @@
 import axios, { AxiosError } from 'axios';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 interface MoniLink {
   url: string;
@@ -9,6 +12,9 @@ interface MoniLink {
 
 interface MoniTag {
   name: string;
+  slug: string;
+  color: string;
+  hoverColor: string;
 }
 
 interface MoniTwitterInfo {
@@ -42,38 +48,43 @@ class MoniApiError extends Error {
 }
 
 export class MoniService {
-  constructor(
-    private apiKey: string = process.env.MONI_API_KEY!,
-    private baseUrl: string = 'https://api.discover.getmoni.io/api/v1'
-  ) {
+  private baseUrl: string;
+  private apiKey: string;
+
+  constructor() {
+    this.baseUrl = 'https://api.discover.getmoni.io/api/v1';
+    this.apiKey = process.env.MONI_API_KEY!;
+
     if (!this.apiKey) {
-      throw new Error('Moni API key is required');
+      throw new Error('MONI_API_KEY is required in environment variables');
     }
   }
 
   async getTwitterInfo(username: string): Promise<MoniTwitterInfo> {
     try {
       const response = await axios.get<MoniTwitterInfo>(
-        `${this.baseUrl}/twitters/${username}/info`,
+        `${this.baseUrl}/twitters/${username}/info/`,
         {
           headers: {
-            'Authorization': `Bearer ${this.apiKey}`
+            'accept': 'application/json',
+            'Api-Key': this.apiKey
           }
         }
       );
 
+      // Validate the response data
+      this.validateTwitterInfo(response.data);
+      
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response) {
-          // API responded with error
           throw new MoniApiError(
             `Moni API error: ${error.response.data?.message || error.message}`,
             error.response.status,
             error
           );
         } else if (error.request) {
-          // No response received
           throw new MoniApiError(
             'No response received from Moni API',
             undefined,
@@ -81,7 +92,6 @@ export class MoniService {
           );
         }
       }
-      // Generic error handling
       throw new MoniApiError(
         'Failed to fetch Twitter info from Moni',
         undefined,
@@ -90,7 +100,6 @@ export class MoniService {
     }
   }
 
-  // Optional: Add validation method
   private validateTwitterInfo(data: any): asserts data is MoniTwitterInfo {
     const required = ['username', 'followersCount', 'followersScore', 'mentionsCount'];
     for (const field of required) {
