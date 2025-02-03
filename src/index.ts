@@ -7,11 +7,21 @@ import { DataCollector } from './scheduler/data-collector.js';
 db();
 
 // Initialize data collector with configured username
-const dataCollector = new DataCollector(config().TWITTER_USERNAME);
+// const dataCollector = new DataCollector(config().TWITTER_USERNAME);
+
+
+// Create a DataCollector instance with the username
+const collector = new DataCollector('alephium');
+
+// Start the periodic tweet collection
+collector.startCollection();
+
+console.log('Tweet collection job started for @alephium');
+console.log('Press Ctrl+C to stop the collection process.');
 
 // Start the Twitter collection job
 try {
-  dataCollector.startTwitterCollection();
+  // dataCollector.startTwitterCollection();
   console.log(`Started Twitter collection job for @${config().TWITTER_USERNAME}`);
 } catch (error) {
   console.error('Failed to start Twitter collection job:', error);
