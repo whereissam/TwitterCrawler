@@ -12,11 +12,15 @@
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "drizzle:generate": "drizzle-kit generate:pg",
-    "drizzle:migrate": "npx tsx src/db/migrate-standalone.ts"
+    "drizzle:migrate": "npx tsx src/db/migrate-standalone.ts",
+    "test:cron": "tsx test/test-cron.ts",
+    "test:twitter": "tsx test/twitter-api.ts"
   },
   "dependencies": {
     "@types/node-cron": "^3.0.11",
     "axios": "^1.7.9",
+    "date-fns": "^4.1.0",
+    "date-fns-tz": "^3.2.0",
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.29.4",

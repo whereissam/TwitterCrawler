@@ -25,41 +25,27 @@ npm run build && npm run start
 curl --location 'http://localhost:8080/accounts' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "email": "mike@mail.com",
-    "firstName": "Mike",
-    "lastName": "Brown",
-    "currency": "USD",
-    "balance": 100
+    "username": "alephium",
+    "id": "1234567890",
+    "type": "product"
 }'
 ```
 </details>
 
 <details>
-    <summary>Get All Accounts</summary>
+
+<summary>Twitter cron job</summary>
 
 ```shell
-curl --location 'http://localhost:8080/accounts'
+bun run test:cron
 ```
+
 </details>
 
-<details>
-    <summary>Get Account By Id</summary>
+<summary>Twitter api call</summary>
 
 ```shell
-curl --location 'http://localhost:8080/accounts/1'
+bun run test:twitter
 ```
-</details>
 
-<details>
-    <summary>Transfer Money</summary>
-
-```shell
-curl --location 'http://localhost:8080/accounts/transfer' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "senderId": 1,
-    "recipientId": 2,
-    "amount": 100
-}'
-```
 </details>
